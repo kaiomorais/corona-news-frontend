@@ -16,6 +16,7 @@ export const TogglerNav = ({ onClickAct, children }) => {
         aria-controls="toggler"
         aria-expanded="false"
         aria-label="navegação"
+        alt="expandir"
         onClick={() => {
           onClickAct()
           setCollapsed(!collapsed)

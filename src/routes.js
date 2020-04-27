@@ -4,8 +4,14 @@ import Home from './pages/home'
 import About from './pages/about'
 import { MainLayout } from './pages/MainLayout'
 import { ThemeProvider, themes } from './components/context/ThemeContext'
+import Initiatives from './pages/initiatives'
+import FreeServices from './pages/free-service/FreeServices'
+import Donation from './pages/donation'
+import intl from 'react-intl-universal'
 
 export default function Routes() {
+  const content = intl.get('json-data')
+
   return (
     <BrowserRouter>
       <Switch>
@@ -15,32 +21,38 @@ export default function Routes() {
           </MainLayout>
         </Route>
 
-        <Route exact path="/iniciativas">
+        <Route exact path="/news">
+          <MainLayout>
+            <Home />
+          </MainLayout>
+        </Route>
+
+        <Route exact path="/initiative">
           <ThemeProvider value={themes.purple} >
             <MainLayout>
-              <Home />
+              <Initiatives color={themes.purple} spreadsheetLink={content.initiatives} />
             </MainLayout>
           </ThemeProvider>
         </Route>
 
-        <Route exact path="/existe-amor">
-          <ThemeProvider value={themes.lemon} >
-            <MainLayout>
-              <Home />
-            </MainLayout>
-          </ThemeProvider>
-        </Route>
-
-        <Route exact path="/servicos">
+        <Route exact path="/services">
           <ThemeProvider value={themes.green} >
             <MainLayout>
-              <Home />
+              <FreeServices color={themes.green} spreadsheetLink={content.freeServices}></FreeServices>
             </MainLayout>
           </ThemeProvider>
         </Route>
 
-        <Route exact path="/sobre">
-          <ThemeProvider value={themes.blue} >
+        <Route exact path="/donate">
+          <ThemeProvider value={themes.pink} >
+            <MainLayout>
+              <Donation color={themes.pink} spreadsheetLink={content.donation}></Donation>
+            </MainLayout>
+          </ThemeProvider>
+        </Route>
+
+        <Route exact path="/about">
+          <ThemeProvider value={themes.orange} >
             <MainLayout>
               <About />
             </MainLayout>

@@ -1,65 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './style.css'
 import Person from './Person'
-import Adnet from '../../assets/fernando.png'
-import Maciel from '../../assets/maciel.png'
-import Rafa from '../../assets/rafa.png'
-import Urso from '../../assets/urso.png'
+import getItemsFromSpreadsheet from '../../utils/spreadsheet'
+import intl from 'react-intl-universal'
 
 const About = () => {
+  const [creators, setCreators] = useState([])
+  const [colaborators, setColaborators] = useState([])
+  const about = intl.get('about')
+
+  useEffect(() => {
+    const loadPeople = async () => {
+      const peopleJson = await getItemsFromSpreadsheet(about.people)
+      listOfPeople(peopleJson)
+    }
+    loadPeople()
+  }, [])
+
+  function listOfPeople(peopleJson) {
+    const creatorsList = peopleJson.filter(creator => creator.Role === 'Idealizador')
+    const colaboratorsList = peopleJson.filter(colaborator => colaborator.Role === 'Colaborador')
+    setCreators(creatorsList)
+    setColaborators(colaboratorsList)
+  }
+
   return (
     <div className="container">
-      <h1 className="title">Sobre</h1>
       <div className="subtitle">
-        <h2>Nossa missão</h2>
+        <h2>{about.mission}</h2>
         <p className="description">
-          A catástrofe desenhada pela Covid-19 nos direciona, naturalmente, para um cenário de desesperança. São tantos aspectos negativos que esquecemos que existem notícias fantásticas: número de curados, buscas por uma vacina em uma velocidade sem precedentes, colaboração entre organismos internacionais e a sociedade civil. Por isso precisamos ampliar o nosso olhar.
+          {about.msg1}
         </p>
         <p className="description">
-          E é para isso que o “The Good News Coronavírus” foi concebido: ser um farol de esperança para quem se sente afogado em um oceano de más notícias, que apesar de serem importantes para a prevenção da pandemia, causam ansiedade e desespero.
-        </p>
+          {about.msg2}        </p>
         <p className="description">
-          Através desse portal a sociedade vai saber que existe um amanhã de possibilidades e que a derrota ao Coronavírus vai entrar na história como o momento em que nos conectamos  e construímos um futuro melhor.
-        </p>
+          {about.msg3}        </p>
+        <blockquote>
+          <p className="description note">
+            {about.msg4}          </p>
+        </blockquote>
+        <p className="description">
+          {about.msg5}        </p>
       </div>
 
       <div className="subtitle">
-        <h2>Nota</h2>
-        <p className="description">
-          Esse portal não tem qualquer direcionamento político, nenhum relacionamento ou suporte vindo de qualquer nível de governo ou seus terceiros, tendo sua idealização e desenvolvimento inteiramente partido de membros da sociedade civil.
-        </p>
-        <p className="description">
-          As pessoas  desse grupo são favoráveis ao isolamento social como melhor medida para o combate ao Covid-19 e defendem que todas as medidas e recomendação da Organização Mundial de Saúde (OMS) no combate ao Covid-19 sejam seguidas.
-        </p>
-      </div>
-
-      <div className="subtitle">
-        <h2>Quem somos</h2>
+        <h2>{about.creators}</h2>
         <div className="row mt-5">
-          <Person
-            name="Fernando Fernandes"
-            role="Desenvolvedor"
-            link="https://www.linkedin.com/in/flasfl/"
-            linkImg={Adnet}
-          />
-          <Person
-            name="Rafaela Fernandes"
-            role="Designer"
-            link="https://www.linkedin.com/in/rafaela-fernandes/"
-            linkImg={Rafa}
-          />
-          <Person
-            name="Maciel Melo"
-            role="Desenvolvedor"
-            link="https://www.linkedin.com/in/macielmelo/"
-            linkImg={Maciel}
-          />
-          <Person
-            name="Daniel Barros"
-            role="Desenvolvedor"
-            link="https://www.linkedin.com/in/danielnbarros/"
-            linkImg={Urso}
-          />
+          {creators.map(creator => (
+            <Person key={creator.Nome}
+              name={creator.Nome}
+              role={creator.Cargo}
+              link={creator.Link}
+              linkImg={creator.Imagem}
+            />
+          ))}
+        </div>
+
+        <div className="subtitle">
+          <h2>{about.collaborators}</h2>
+          <div className="row mt-5">
+            {colaborators.map(colaborator => (
+              <Person key={colaborator.Nome}
+                name={colaborator.Nome}
+                role={colaborator.Cargo}
+                link={colaborator.Link}
+                linkImg={colaborator.Imagem}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

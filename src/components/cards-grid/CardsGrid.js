@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import './style.css'
 import Card from './Card'
+import AdCard from './AdCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import PropTypes from 'prop-types'
+import Loading from '../loading'
 
 export default function CardsGrid({ content, analyticsCategory }) {
   const BATCH_SIZE = 9
@@ -42,10 +44,13 @@ export default function CardsGrid({ content, analyticsCategory }) {
         <div className="album py-5">
           <div className="container">
             <div className="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3">
-              {visibleItems.map(item => (
-                <div className="col" key={`${item.title}-${item.fonte}`}>
-                  <Card {...item} analyticsCategory={analyticsCategory} />
-                </div>
+              {visibleItems.map((item, index) => (
+                <>
+                  <div className="col" key={`${item.title}-${item.fonte}`}>
+                    <Card {...item} analyticsCategory={analyticsCategory} />
+                  </div>
+                  <AdCard index={index} frequency="3" />
+                </>
               ))}
             </div>
           </div>
@@ -54,17 +59,7 @@ export default function CardsGrid({ content, analyticsCategory }) {
     )
   }
 
-  const buildLoading = () => {
-    return (
-      <div className="fluid-container text-center">
-        <div className="spinner-grow text-primary load-spin" role="status">
-          <span className="sr-only">Carregando...</span>
-        </div>
-      </div>
-    )
-  }
-
-  return allItems.length > 0 ? buildContent() : buildLoading()
+  return allItems.length > 0 ? buildContent() : <Loading />
 }
 
 CardsGrid.propTypes = {
